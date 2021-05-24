@@ -42,6 +42,9 @@ def create_intent(
 
     print("Intent created: {}".format(response))
 
+    agents_client = dialogflow.AgentsClient()
+    agents_client.train_agent(parent=f'projects/{project_id}')
+
 
 def main():
     data = get_data_from_file('chat_questions.json')
