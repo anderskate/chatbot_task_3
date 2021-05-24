@@ -48,7 +48,7 @@ def create_intent(
 
 def main():
     data = get_data_from_file('chat_questions.json')
-    project_id = ''
+    project_id = 'tactical-codex-313718'
     for intent_key, intent_data in data.items():
         create_intent(
             project_id, intent_key,
