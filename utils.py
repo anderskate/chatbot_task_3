@@ -49,12 +49,12 @@ def create_intent(
 def main():
     data = get_data_from_file('chat_questions.json')
     project_id = ''
-    display_name = 'Устройство на работу'
-    create_intent(
-        project_id, display_name,
-        data[display_name]['questions'],
-        data[display_name]['answer'],
-    )
+    for intent_key, intent_data in data.items():
+        create_intent(
+            project_id, intent_key,
+            intent_data['questions'],
+            intent_data['answer'],
+        )
 
 
 if __name__ == '__main__':
