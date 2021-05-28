@@ -1,9 +1,15 @@
 import json
+import os
 from google.cloud import dialogflow
+from dotenv import load_dotenv
+
+
+# Data JSON file with intent questions
+INTENT_QUESTIONS_FILE = 'chat_questions.json'
 
 
 def get_data_from_file(file_path):
-    """"""
+    """Get data from JSON file."""
     with open(file_path, 'r') as file:
         data = json.load(file)
     return data
@@ -11,7 +17,8 @@ def get_data_from_file(file_path):
 
 def create_intent(
         project_id, display_name,
-        training_phrases_parts, message_texts):
+        training_phrases_parts, message_texts
+):
     """Create an intent of the given intent type."""
 
     intents_client = dialogflow.IntentsClient()
@@ -36,19 +43,18 @@ def create_intent(
         messages=[message],
     )
 
-    response = intents_client.create_intent(
+    intents_client.create_intent(
         request={"parent": parent, "intent": intent}
     )
-
-    print("Intent created: {}".format(response))
 
     agents_client = dialogflow.AgentsClient()
     agents_client.train_agent(parent=f'projects/{project_id}')
 
 
 def main():
-    data = get_data_from_file('chat_questions.json')
-    project_id = 'tactical-codex-313718'
+    load_dotenv()
+    data = get_data_from_file(INTENT_QUESTIONS_FILE)
+    project_id = os.getenv('DIALOGFLOW_PROJECT_ID')
     for intent_key, intent_data in data.items():
         create_intent(
             project_id, intent_key,
