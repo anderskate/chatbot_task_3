@@ -1,5 +1,6 @@
 import random
 import os
+import logging
 
 import vk_api as vk
 from vk_api.longpoll import VkLongPoll, VkEventType
@@ -49,6 +50,10 @@ class DialogVKBot:
 
 def main():
     load_dotenv()
+    logging.basicConfig(
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        level=logging.INFO
+    )
     vk_chat_bot = DialogVKBot()
     vk_chat_bot.start_chat()
 
