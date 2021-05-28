@@ -11,6 +11,7 @@ The script uses enviroment file with authorization data. The file '.env' must in
 - DIALOGFLOW_PROJECT_ID, project id in DialogFlow service
 - TELEGRAM_TOKEN, Telegram bot token
 - VK_TOKEN, VK bot token
+- TG_ADMIN_CHAT_ID, Telegram admin chat id for debugging
 
 Python 3 should be already installed. Then use pip3 (or pip) to install dependencies:
 

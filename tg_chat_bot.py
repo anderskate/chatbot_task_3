@@ -7,6 +7,10 @@ from telegram.ext import MessageHandler, Filters
 
 from dotenv import load_dotenv
 from utils import detect_intent_texts
+from logs_handler import LogsHandler
+
+
+logger = logging.getLogger(__file__)
 
 
 class DialogTelegramBot:
@@ -50,7 +54,10 @@ class DialogTelegramBot:
 
     def start_chat(self):
         """Start chat bot."""
-        self.updater.start_polling()
+        try:
+            self.updater.start_polling()
+        except Exception as e:
+            logger.exception(e)
 
 
 def main():
@@ -59,6 +66,8 @@ def main():
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         level=logging.INFO
     )
+    logs_handler = LogsHandler(level=logging.INFO)
+    logger.addHandler(logs_handler)
 
     bot_token = os.getenv('TELEGRAM_TOKEN')
     dialog_bot = DialogTelegramBot(bot_token)

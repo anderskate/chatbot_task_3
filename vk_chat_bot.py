@@ -6,8 +6,11 @@ import vk_api as vk
 from vk_api.longpoll import VkLongPoll, VkEventType
 
 from utils import detect_intent_texts
-
+from logs_handler import LogsHandler
 from dotenv import load_dotenv
+
+
+logger = logging.getLogger(__file__)
 
 
 class DialogVKBot:
@@ -45,7 +48,10 @@ class DialogVKBot:
         longpoll = VkLongPoll(vk_session)
         for event in longpoll.listen():
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-                self.echo(event, vk_api)
+                try:
+                    self.echo(event, vk_api)
+                except Exception as e:
+                    logger.exception(e)
 
 
 def main():
@@ -54,6 +60,8 @@ def main():
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         level=logging.INFO
     )
+    logs_handler = LogsHandler(level=logging.INFO)
+    logger.addHandler(logs_handler)
     vk_chat_bot = DialogVKBot()
     vk_chat_bot.start_chat()
 
