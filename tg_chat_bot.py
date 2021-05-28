@@ -17,7 +17,6 @@ class DialogTelegramBot:
     def __init__(self, token):
         """Initialize TelegramBot instance."""
         self.project_id = os.getenv('DIALOGFLOW_PROJECT_ID')
-        self.session_id = os.getenv('DIALOGFLOW_SESSION_ID')
 
         self.updater = Updater(token=token)
 
@@ -37,9 +36,10 @@ class DialogTelegramBot:
     def echo(self, bot, update):
         """Handle user question using DialogFlow."""
         user_text = update.message.text
+        user_id = update.message.chat_id
         language_code = 'ru'
         bot_response = detect_intent_texts(
-            self.project_id, self.session_id,
+            self.project_id, user_id,
             user_text, language_code
         )
 

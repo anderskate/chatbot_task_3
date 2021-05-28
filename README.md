@@ -9,7 +9,6 @@ In VK: https://vk.com/club204754660
 The script uses enviroment file with authorization data. The file '.env' must include following data:
 - GOOGLE_APPLICATION_CREDENTIALS, credentials for google DialogFlow authorization
 - DIALOGFLOW_PROJECT_ID, project id in DialogFlow service
-- DIALOGFLOW_SESSION_ID, unique session id. You can use Telegram user id for that
 - TELEGRAM_TOKEN, Telegram bot token
 - VK_TOKEN, VK bot token
 
