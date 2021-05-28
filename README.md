@@ -1,6 +1,9 @@
 # Bot assistant for employees
 Helps answer user questions. Uses DialogFlow service with machine learning
 
+For testing, you can use these bots:
+In TG: @QwerfrhhyuuBot
+In VK: https://vk.com/club204754660
 
 # How to install
 The script uses enviroment file with authorization data. The file '.env' must include following data:
