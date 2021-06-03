@@ -29,6 +29,15 @@ $ python3 vk_chat_bot.py
 
 It is better to launch the script on a remote server, [Heroku](https://devcenter.heroku.com/articles/how-heroku-works), for example. It provides that it will work around the clock. A "Procfile" is need to launch correctly on Heroku.
 
+
+# Create new intents for chat-bot
+You can create new intents for answers to user questions. 
+You need to specify the file path to upload.
+
+```bash
+$ python3 create_intents.py --file=chat_questions.json
+```
+
 # Project Goals
 
 The code is written for educational purposes on online-course for web-developers dvmn.org, module [Chat Bots with Python](https://dvmn.org/modules/chat-bots/lesson/devman-bot/#review-tabs).

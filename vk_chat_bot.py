@@ -5,7 +5,7 @@ import logging
 import vk_api as vk
 from vk_api.longpoll import VkLongPoll, VkEventType
 
-from utils import detect_intent_texts
+from dialogflow_services import detect_intent_texts
 from logs_handler import LogsHandler
 from dotenv import load_dotenv
 
@@ -23,16 +23,17 @@ class DialogVKBot:
         self.project_id = os.getenv('DIALOGFLOW_PROJECT_ID')
         self.vk_group_token = os.getenv('VK_TOKEN')
 
-    def echo(self, event, vk_api):
-        """Handle user question using DialogFlow."""
+    def reply_to_message(self, event, vk_api):
+        """Reply to message for user question using DialogFlow."""
 
         session_id = event.user_id
 
-        message_response = detect_intent_texts(
+        message_response, text_is_fallback = detect_intent_texts(
             self.project_id, session_id,
             event.text, 'ru',
         )
-        if not message_response:
+
+        if text_is_fallback:
             return
 
         vk_api.messages.send(
@@ -41,17 +42,14 @@ class DialogVKBot:
             random_id=random.randint(1,1000)
         )
 
-    def start_chat(self):
+    def start_bot(self):
         """Start chat bot."""
         vk_session = vk.VkApi(token=self.vk_group_token)
         vk_api = vk_session.get_api()
         longpoll = VkLongPoll(vk_session)
         for event in longpoll.listen():
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-                try:
-                    self.echo(event, vk_api)
-                except Exception as e:
-                    logger.exception(e)
+                self.reply_to_message(event, vk_api)
 
 
 def main():
@@ -63,7 +61,7 @@ def main():
     logs_handler = LogsHandler(level=logging.INFO)
     logger.addHandler(logs_handler)
     vk_chat_bot = DialogVKBot()
-    vk_chat_bot.start_chat()
+    vk_chat_bot.start_bot()
 
 
 if __name__ == "__main__":

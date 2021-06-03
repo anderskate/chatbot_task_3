@@ -2,7 +2,8 @@ from google.cloud import dialogflow
 
 
 def detect_intent_texts(project_id, session_id, text, language_code):
-    """Returns the result of detect intent from with texts as inputs.
+    """Returns the result of detect intent from with texts as inputs
+    and is the text fallback or not.
 
     Using the same `session_id` between requests allows continuation
     of the conversation."""
@@ -21,4 +22,10 @@ def detect_intent_texts(project_id, session_id, text, language_code):
         request={"session": session, "query_input": query_input}
     )
 
-    return response.query_result.fulfillment_text
+    text_result = response.query_result.fulfillment_text
+    text_is_fallback = False
+
+    if response.query_result.intent.is_fallback:
+        text_is_fallback = True
+
+    return text_result, text_is_fallback

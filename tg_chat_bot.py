@@ -6,7 +6,7 @@ from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler, Filters
 
 from dotenv import load_dotenv
-from utils import detect_intent_texts
+from dialogflow_services import detect_intent_texts
 from logs_handler import LogsHandler
 
 
@@ -24,11 +24,15 @@ class DialogTelegramBot:
 
         self.updater = Updater(token=token)
 
-        start_handler = CommandHandler('start', self.start)
+        start_handler = CommandHandler(
+            'start', self.start
+        )
         self.updater.dispatcher.add_handler(start_handler)
 
-        echo_handler = MessageHandler(Filters.text, self.echo)
-        self.updater.dispatcher.add_handler(echo_handler)
+        message_reply_handler = MessageHandler(
+            Filters.text, self.reply_to_message
+        )
+        self.updater.dispatcher.add_handler(message_reply_handler)
 
     def start(self, bot, update):
         """Handle start command from user."""
@@ -37,12 +41,12 @@ class DialogTelegramBot:
             text="Здравствуйте!"
         )
 
-    def echo(self, bot, update):
-        """Handle user question using DialogFlow."""
+    def reply_to_message(self, bot, update):
+        """Reply to message for user question using DialogFlow."""
         user_text = update.message.text
         user_id = update.message.chat_id
         language_code = 'ru'
-        bot_response = detect_intent_texts(
+        bot_response, _ = detect_intent_texts(
             self.project_id, user_id,
             user_text, language_code
         )
@@ -52,12 +56,9 @@ class DialogTelegramBot:
             text=bot_response,
         )
 
-    def start_chat(self):
+    def start_bot(self):
         """Start chat bot."""
-        try:
-            self.updater.start_polling()
-        except Exception as e:
-            logger.exception(e)
+        self.updater.start_polling()
 
 
 def main():
@@ -71,7 +72,7 @@ def main():
 
     bot_token = os.getenv('TELEGRAM_TOKEN')
     dialog_bot = DialogTelegramBot(bot_token)
-    dialog_bot.start_chat()
+    dialog_bot.start_bot()
 
 
 if __name__ == '__main__':

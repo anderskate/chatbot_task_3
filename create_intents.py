@@ -1,11 +1,8 @@
 import json
 import os
+import argparse
 from google.cloud import dialogflow
 from dotenv import load_dotenv
-
-
-# Data JSON file with intent questions
-INTENT_QUESTIONS_FILE = 'chat_questions.json'
 
 
 def get_data_from_file(file_path):
@@ -53,7 +50,19 @@ def create_intent(
 
 def main():
     load_dotenv()
-    data = get_data_from_file(INTENT_QUESTIONS_FILE)
+    parser = argparse.ArgumentParser(
+        description='Program for adding intents for chat bot'
+    )
+    parser.add_argument(
+        '--file',
+        help='File for uploading intents',
+        required=True,
+        type=str,
+    )
+    args = parser.parse_args()
+
+    file_path = args.file
+    data = get_data_from_file(file_path)
     project_id = os.getenv('DIALOGFLOW_PROJECT_ID')
     for intent_key, intent_data in data.items():
         create_intent(
